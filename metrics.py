@@ -100,37 +100,31 @@ class HitsMatchingEfficiency(object):
 
 class RecognitionQuality(object):
 
-    def __init__(self, real_tracks, recognized_tracks, track_eff_threshold, min_hits_per_track):
+    def __init__(self, track_eff_threshold, min_hits_per_track):
         """
         This class is used to evaluate tracks recognition quality for all events.
 
         Parameters
         ----------
-        real_tracks : pandas.DataFrame
-            Events and tracks.
-        recognized_tracks : pandas.DataFrame
-            Recognized tracks for the events.
         track_eff_threshold : float
             Track Finding Efficiency threshold.
         min_hits_per_track : int
             Minimum number of hits per track.
         """
 
-        self.real_tracks = real_tracks
-        self.recognized_tracks = recognized_tracks
         self.track_eff_threshold = track_eff_threshold
         self.min_hits_per_track = min_hits_per_track
 
-        self.report_ = None
-
-    def calculate(self):
+    def calculate(self, X, y, y_reco):
         """
         Return
         ------
-        report_event : pandas.DataFrame
-            Track recognition quality for all events.
-        report_tracks : pandas.DataFrame
-            Track recognition quality for all tracks in all events.
+        X : ndarray-like
+            Hit features.
+        y : array-like
+            True hit labels.
+        y_reco : array-like
+            Reconstructed hit labels.
         """
 
         reco_eff = []
@@ -143,15 +137,12 @@ class RecognitionQuality(object):
         evnt_ids_col2 = []
         track_ids = []
 
-        event_ids = numpy.unique(self.real_tracks.event.values)
+        event_ids = numpy.unique(X[:, 0])
 
         for one_event_id in event_ids:
 
-            real_event = self.real_tracks[self.real_tracks.event.values == one_event_id]
-            reco_event = self.recognized_tracks[self.recognized_tracks.event.values == one_event_id]
-
-            true_labels = real_event.particle.values
-            reco_labels = reco_event.track.values
+            true_labels = y[X[:, 0] == one_event_id]
+            reco_labels = y_reco[X[:, 0] == one_event_id]
 
 
             hme = HitsMatchingEfficiency(eff_threshold=self.track_eff_threshold, min_hits_per_track=self.min_hits_per_track)
