@@ -44,22 +44,19 @@ class TrackRecognizer(object):
 
             one_event = events[events.event.values == one_event_id]
 
-            self.method.predict(one_event.x.values, one_event.y.values)
-            track_inds = self.method.track_inds_
+            self.method.fit(one_event[['x', 'y']].values, one_event.particle.values)
+            labels = self.method.predict(one_event[['x', 'y']].values)
 
-            for track_id, one_track in enumerate(track_inds):
+            event += [one_event_id] * len(labels)
+            track += list(labels)
+            x += list(one_event.x.values)
+            y += list(one_event.y.values)
 
-                event += list(one_event.event.values[one_track])
-                track += [track_id] * len(one_track)
-                hit += list(one_event.index[one_track])
-                x += list(one_event.x.values[one_track])
-                y += list(one_event.y.values[one_track])
 
 
         results = pandas.DataFrame()
         results['event'] = event
         results['track'] = track
-        results['hit_index'] = hit
         results['x'] = x
         results['y'] = y
 
