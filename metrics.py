@@ -117,17 +117,18 @@ class RecognitionQuality(object):
         for one_event_id in event_ids:
 
             real_event = self.real_tracks[self.real_tracks.event.values == one_event_id]
+            real_event['hit_global_index'] = real_event.index
             real_event.reset_index(drop=True, inplace=True)
             reco_event = self.recognized_tracks[self.recognized_tracks.event.values == one_event_id]
             reco_event.reset_index(drop=True, inplace=True)
 
-            hit2ind = dict(zip(real_event.hit.values, real_event.index.values))
+            hit2ind = dict(zip(real_event['hit_global_index'].values, real_event.index.values))
 
             track_inds = []
 
             for reco_track_id in numpy.unique(reco_event.track.values):
 
-                reco_track_hits = reco_event.hit.values[reco_event.track.values == reco_track_id]
+                reco_track_hits = reco_event['hit_index'].values[reco_event.track.values == reco_track_id]
                 reco_track_inds = [hit2ind[i] for i in reco_track_hits]
 
                 track_inds.append(reco_track_inds)

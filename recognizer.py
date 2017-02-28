@@ -51,7 +51,7 @@ class TrackRecognizer(object):
 
                 event += list(one_event.event.values[one_track])
                 track += [track_id] * len(one_track)
-                hit += list(one_event.hit.values[one_track])
+                hit += list(one_event.index[one_track])
                 x += list(one_event.x.values[one_track])
                 y += list(one_event.y.values[one_track])
 
@@ -59,7 +59,7 @@ class TrackRecognizer(object):
         results = pandas.DataFrame()
         results['event'] = event
         results['track'] = track
-        results['hit'] = hit
+        results['hit_index'] = hit
         results['x'] = x
         results['y'] = y
 
