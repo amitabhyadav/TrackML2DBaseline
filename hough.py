@@ -27,16 +27,14 @@ class Hough(object):
         self.min_hits = min_hits
 
 
-    def tranform(self, x, y):
+    def tranform(self, X):
         """
         Hough Transformation and tracks pattern recognition.
 
         Parameters
         ----------
-        x : array_like
-            X-coordinates of hits
-        y : array_like
-            Y-coordinates of hits
+        X : array_like
+            Hit features.
 
         Return
         ------
@@ -48,6 +46,7 @@ class Hough(object):
             List of track parameters.
         """
 
+        x, y = X[:, 3], X[:, 4]
         # Transform cartesian coordinates to polar coordinates
         hit_phis = numpy.arctan(y / x) * (x != 0) + numpy.pi * (x < 0) + 0.5 * numpy.pi * (x==0) * (y>0) + 1.5 * numpy.pi * (x==0) * (y<0)
         hit_rs = numpy.sqrt(x**2 + y**2)
@@ -85,20 +84,105 @@ class Hough(object):
 
         return matrix_hough[:, 1:-1], track_inds, track_params
 
-    def predict(self, x, y):
+
+    def get_hit_labels(self, track_inds, n_hits):
         """
-        Hough Transformation and tracks pattern recognition.
+        Estimate hit labels based on the recognized tracks.
 
         Parameters
         ----------
-        x : array_like
-            X-coordinates of hits
-        y : array_like
-            Y-coordinates of hits
+        track_inds : ndarray
+            List of recognized tracks. Each track is a list of its hit indexes.
+        n_hits : int
+            Number of hits in the event.
+
+        Return
+        ------
+        labels : array-like
+            Hit labels.
         """
 
-        matrix_hough, track_inds, track_params = self.tranform(x, y)
+        labels = -1. * numpy.ones(n_hits)
+        used = numpy.zeros(n_hits)
+        track_id = 0
+
+
+        while 1:
+
+            track_lens = numpy.array([len(i[used[i] == 0]) for i in track_inds])
+
+            if len(track_lens) == 0:
+                break
+
+            max_len = track_lens.max()
+
+            if max_len < self.min_hits:
+                break
+
+            one_track_inds = track_inds[track_lens == track_lens.max()][0]
+            one_track_inds = one_track_inds[used[one_track_inds] == 0]
+
+            used[one_track_inds] = 1
+            labels[one_track_inds] = track_id
+            track_id += 1
+
+        return numpy.array(labels)
+
+    def fit(self, X, y):
+        pass
+
+    def predict_one_event(self, X):
+        """
+        Hough Transformation and tracks pattern recognition for one event.
+
+        Parameters
+        ----------
+        X : ndarray_like
+            Hit features.
+
+        Return
+        ------
+        Labels : array-like
+            Track id labels for the each hit.
+        """
+
+        matrix_hough, track_inds, track_params = self.tranform(X)
 
         self.matrix_hough_ = matrix_hough
         self.track_inds_ = track_inds
         self.track_params_ = track_params
+
+
+        labels = self.get_hit_labels(track_inds, len(X))
+
+        return labels
+
+    def predict(self, X):
+        """
+        Tracks pattern recognition for several events.
+
+        Parameters
+        ----------
+        X : ndarray_like
+            Hit features.
+
+        Return
+        ------
+        Labels : array-like
+            Track id labels for the each hit.
+        """
+
+        event_ids = numpy.unique(X[:, 0])
+        labels = []
+
+        for one_event_id in event_ids:
+
+            X_event = X[X[:, 0] == one_event_id]
+            labels_event = self.predict_one_event(X_event)
+            labels += list(labels_event)
+
+        return numpy.array(labels)
+
+
+
+
