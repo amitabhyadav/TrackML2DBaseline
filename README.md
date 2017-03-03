@@ -32,3 +32,10 @@ docker run -i -t --rm --volume ${NOTEBOOKS}:/notebooks -p ${PORT}:8888 ${DOCKER_
 
 Open the page **http://localhost:8881** in your browser. After that you will able to run notebooks of this repositury.
 
+
+## Eveware instructions
+
+[![run at everware](https://img.shields.io/badge/run%20me-@everware-blue.svg?style=flat)](https://everware.rep.school.yandex.net/hub/oauth_login?repourl=https://github.com/hushchyn-mikhail/TrackML2DBaseline)
+
+You can run this repository on [https://everware.rep.school.yandex.net](https://everware.rep.school.yandex.net) (if you have account) by clicking button above.
+
