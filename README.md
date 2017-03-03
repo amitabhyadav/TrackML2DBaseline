@@ -6,6 +6,13 @@ This repository contains several baseline solutions for the TrackML mini challen
 
 <img src="pic/detector.png" /> <br>
 
+## Baseline solutions
+
+* **1_hough_transform.ipynb** - track pattern recognition based on Hough Transform.
+* **2_tracks_classification.ipynb** - track pattern recognition based on Hough Transform with Random Forest classifier to separate ghost tracks from good ones. This increases the track pattern recognition performance.
+* **3_nearest_hit.ipynb** - simple and fast track pattern recognition method. It is a local method where a track is grown up hit by hit.
+* **4_linear_approximation.ipynb** - very simple and fast method for track recognition. It is supposed that a track is a straight line.
+
 ## Software requirements
 
 ```
