@@ -18,6 +18,12 @@ ipykernel == 4.5.2
 notebook == 4.2.1
 ```
 
+## Eveware instructions
+
+[![run at everware](https://img.shields.io/badge/run%20me-@everware-blue.svg?style=flat)](https://everware.rep.school.yandex.net/hub/oauth_login?repourl=https://github.com/hushchyn-mikhail/TrackML2DBaseline)
+
+You can run this repository on [https://everware.rep.school.yandex.net](https://everware.rep.school.yandex.net) (if you have account) by clicking button above.
+
 ## Docker instructions
 
 Docker container **yandex/rep:0.6.6** can be used to run solutions of this reposipory. It contains require software, plus XGBoost, ROOT, root_numpy and other. The following instructions help to run the notebooks:
@@ -31,11 +37,4 @@ docker run -i -t --rm --volume ${NOTEBOOKS}:/notebooks -p ${PORT}:8888 ${DOCKER_
 ```
 
 Open the page **http://localhost:8881** in your browser. After that you will able to run notebooks of this repositury.
-
-
-## Eveware instructions
-
-[![run at everware](https://img.shields.io/badge/run%20me-@everware-blue.svg?style=flat)](https://everware.rep.school.yandex.net/hub/oauth_login?repourl=https://github.com/hushchyn-mikhail/TrackML2DBaseline)
-
-You can run this repository on [https://everware.rep.school.yandex.net](https://everware.rep.school.yandex.net) (if you have account) by clicking button above.
 
