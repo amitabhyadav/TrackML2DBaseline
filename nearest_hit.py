@@ -3,7 +3,7 @@ __author__ = 'mikhail91'
 
 import numpy
 
-class NearestHit(object):
+class Clusterer(object):
 
 
     def __init__(self, min_cos_value=0.9):
@@ -87,29 +87,3 @@ class NearestHit(object):
 
 
         return labels
-
-    def predict(self, X):
-        """
-        Track Pattern Recognition for all event.
-
-        Parameters
-        ----------
-        X : ndarray-like
-            Hit features.
-
-        Returns
-        -------
-        labels : array-like
-            Recognized track labels.
-        """
-
-        event_ids = numpy.unique(X[:, 0])
-        labels = []
-
-        for one_event_id in event_ids:
-
-            X_event = X[X[:, 0] == one_event_id]
-            labels_event = self.predict_single_event(X_event)
-            labels += list(labels_event)
-
-        return numpy.array(labels)
