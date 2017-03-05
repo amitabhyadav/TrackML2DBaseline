@@ -3,9 +3,9 @@ __author__ = 'mikhail91'
 
 import numpy
 
-class Hough(object):
+class Clusterer(object):
 
-    def __init__(self, n_theta_bins=100, n_radius_bins=100, min_radius=1., min_hits=4):
+    def __init__(self, n_theta_bins=5000, n_radius_bins=1000, min_radius=20., min_hits=2):
         """
         Track pattern recognition for one event based on Hough Transform.
 
@@ -46,7 +46,7 @@ class Hough(object):
             List of track parameters.
         """
 
-        x, y = X[:, 3], X[:, 4]
+        x, y = X[:, 2], X[:, 3]
         # Transform cartesian coordinates to polar coordinates
         hit_phis = numpy.arctan(y / x) * (x != 0) + numpy.pi * (x < 0) + 0.5 * numpy.pi * (x==0) * (y>0) + 1.5 * numpy.pi * (x==0) * (y<0)
         hit_rs = numpy.sqrt(x**2 + y**2)
@@ -156,32 +156,6 @@ class Hough(object):
         labels = self.get_hit_labels(track_inds, len(X))
 
         return labels
-
-    def predict(self, X):
-        """
-        Tracks pattern recognition for several events.
-
-        Parameters
-        ----------
-        X : ndarray_like
-            Hit features.
-
-        Return
-        ------
-        Labels : array-like
-            Track id labels for the each hit.
-        """
-
-        event_ids = numpy.unique(X[:, 0])
-        labels = []
-
-        for one_event_id in event_ids:
-
-            X_event = X[X[:, 0] == one_event_id]
-            labels_event = self.predict_single_event(X_event)
-            labels += list(labels_event)
-
-        return numpy.array(labels)
 
 
 
