@@ -4,7 +4,7 @@ __author__ = 'mikhail91'
 import numpy
 
 
-class LinearApproximation(object):
+class Clusterer(object):
 
 
     def __init__(self, min_hits=4, window_width=0.03):
@@ -65,7 +65,7 @@ class LinearApproximation(object):
             Recognized track labels.
         """
 
-        x, y, layer = X[:, 3], X[:, 4], X[:, 1]
+        x, y, layer = X[:, 2], X[:, 3], X[:, 0]
         used = numpy.zeros(len(x))
         labels = -1. * numpy.ones(len(x))
         track_id = 0
@@ -89,29 +89,3 @@ class LinearApproximation(object):
                 track_id += 1
 
         return labels
-
-    def predict(self, X):
-        """
-        Track Pattern Recognition for all event.
-
-        Parameters
-        ----------
-        X : ndarray-like
-            Hit features.
-
-        Returns
-        -------
-        labels : array-like
-            Recognized track labels.
-        """
-
-        event_ids = numpy.unique(X[:, 0])
-        labels = []
-
-        for one_event_id in event_ids:
-
-            X_event = X[X[:, 0] == one_event_id]
-            labels_event = self.predict_single_event(X_event)
-            labels += list(labels_event)
-
-        return numpy.array(labels)
