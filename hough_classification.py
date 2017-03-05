@@ -141,7 +141,7 @@ class HoughClassification(Hough):
             y_event = y[X[:, 0] == one_event_id]
 
             # The event track pattern recognition using the base method
-            _ = self.base.predict_one_event(X_event)
+            _ = self.base.predict_single_event(X_event)
 
             # Get recognized track inds. Approach: one hit can belong to several tracks
             track_inds = self.base.track_inds_
@@ -159,7 +159,7 @@ class HoughClassification(Hough):
 
                 # Calculate the track true labels in {0, 1}. 0 - ghost, 1 - good track.
                 hme = HitsMatchingEfficiency(eff_threshold=self.track_eff_threshold, min_hits_per_track=self.min_hits)
-                hme.fit(y_track, [1]*len(y_track))
+                hme.fit(y_track[:, 1], [1]*len(y_track))
                 label = (hme.efficiencies_[0] >= self.track_eff_threshold) * 1.
 
                 yy += [label]
@@ -177,7 +177,7 @@ class HoughClassification(Hough):
 
 
 
-    def predict_one_event(self, X):
+    def predict_single_event(self, X):
         """
         Track patter recognition for one event.
 
@@ -192,7 +192,7 @@ class HoughClassification(Hough):
             Recognized track labels.
         """
 
-        _ = self.base.predict_one_event(X)
+        _ = self.base.predict_single_event(X)
 
         track_inds_ = self.new_track_inds(self.base.track_inds_, X, self.classifier)
         labels = self.get_hit_labels(track_inds_, len(X))

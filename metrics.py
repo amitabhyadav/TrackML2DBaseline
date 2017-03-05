@@ -115,7 +115,7 @@ class RecognitionQuality(object):
         self.track_eff_threshold = track_eff_threshold
         self.min_hits_per_track = min_hits_per_track
 
-    def calculate(self, X, y, y_reco):
+    def calculate(self, y, y_reco):
         """
         Return
         ------
@@ -137,12 +137,12 @@ class RecognitionQuality(object):
         evnt_ids_col2 = []
         track_ids = []
 
-        event_ids = numpy.unique(X[:, 0])
+        event_ids = numpy.unique(y[:, 0])
 
         for one_event_id in event_ids:
 
-            true_labels = y[X[:, 0] == one_event_id]
-            reco_labels = y_reco[X[:, 0] == one_event_id]
+            true_labels = y[y[:, 0] == one_event_id, 1]
+            reco_labels = y_reco[y[:, 0] == one_event_id]
 
 
             hme = HitsMatchingEfficiency(eff_threshold=self.track_eff_threshold, min_hits_per_track=self.min_hits_per_track)

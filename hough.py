@@ -131,7 +131,7 @@ class Hough(object):
     def fit(self, X, y):
         pass
 
-    def predict_one_event(self, X):
+    def predict_single_event(self, X):
         """
         Hough Transformation and tracks pattern recognition for one event.
 
@@ -178,7 +178,7 @@ class Hough(object):
         for one_event_id in event_ids:
 
             X_event = X[X[:, 0] == one_event_id]
-            labels_event = self.predict_one_event(X_event)
+            labels_event = self.predict_single_event(X_event)
             labels += list(labels_event)
 
         return numpy.array(labels)
